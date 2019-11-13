@@ -64,9 +64,6 @@ namespace MagentoSeleniumNet.Tests
                 {
                     throw new Exception("Error - " + dataAllocationEngine.getErrorMessage());
                 }
-            } else
-            {
-
             }
         }
     }
