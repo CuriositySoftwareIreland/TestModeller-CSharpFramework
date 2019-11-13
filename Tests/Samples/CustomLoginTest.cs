@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CuriositySoftware.RunResult.Entities;
+using CuriositySoftware.DataAllocation.Engine;
 
 namespace MagentoSeleniumNet.Tests
 {

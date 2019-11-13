@@ -200,14 +200,20 @@
     <Reference Include="WebDriver, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Selenium.WebDriver.3.141.0\lib\net45\WebDriver.dll</HintPath>
     </Reference>
+    <Reference Include="WebDriver.Support, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Selenium.Support.3.141.0\lib\net45\WebDriver.Support.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pages\BasePage.cs" />
-    <Compile Include="Pages\CustomerAuthentication\CustomerLoginPage.cs" />
-    <Compile Include="Pages\CustomerAuthentication\CustomerRegistrationPage.cs" />
+    <Compile Include="Pages\Samples\CustomerAuthentication\CustomerLoginPage.cs" />
+    <Compile Include="Pages\Samples\CustomerAuthentication\CustomerRegistrationPage.cs" />
+    <Compile Include="Pages\Samples\Splendid\LoginPage.cs" />
+    <Compile Include="Pages\Samples\Splendid\OpportunitiesPage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\Login\CustomLoginTest.cs" />
+    <Compile Include="Tests\Samples\CustomLoginTest.cs" />
+    <Compile Include="Tests\Samples\SplendidCreateOppertunity_DataAllocation.cs" />
     <Compile Include="Tests\TestBase.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,6 @@
-﻿using CuriositySoftware.RunResult.Entities;
+﻿using CuriositySoftware.DataAllocation.Engine;
+using CuriositySoftware.DataAllocation.Entities;
+using CuriositySoftware.RunResult.Entities;
 using CuriositySoftware.RunResult.Services;
 using CuriositySoftware.Utils;
 using NUnit.Framework;
@@ -15,13 +17,65 @@ using System.Threading.Tasks;
 
 namespace MagentoSeleniumNet.Tests
 {
+    public class ModellerConfig
+    {
+        public static String APIUrl = "http://localhost:8080";
+
+        public static String APIKey = "PtYawE1NRkqBmf4dy3tY6kJW5";
+
+        public static String ServerName = "VIP-James";
+    }
+
+    [SetUpFixture]
+    public class DataAllocSetup
+    {
+        [OneTimeSetUp]
+        public void performAllocations()
+        {
+            ConnectionProfile cp = new ConnectionProfile();
+            cp.APIKey = ModellerConfig.APIKey;
+            cp.Url = ModellerConfig.APIUrl;
+
+            DataAllocationEngine dataAllocationEngine = new DataAllocationEngine(cp);
+
+            // Create a list of all the pools that need allocating
+            List<AllocationType> allocationTypes = new List<AllocationType>();
+
+            foreach (Test curTest in TestExecutionContext.CurrentContext.CurrentTest.Tests)
+            {
+                foreach (Test subTest in curTest.Tests)
+                {
+                    DataAllocation[] allocAttr = subTest.Method.GetCustomAttributes<DataAllocation>(true);
+                    if (allocAttr != null && allocAttr.Length > 0)
+                    {
+                        foreach (String testType in allocAttr[0].groups)
+                        {
+                            AllocationType allocationType = new AllocationType(allocAttr[0].poolName, allocAttr[0].suiteName, testType);
+
+                            allocationTypes.Add(allocationType);
+                        }
+                    }
+                }
+            }
+
+            if (allocationTypes.Count > 0)
+            {
+                if (!dataAllocationEngine.ResolvePools(ModellerConfig.ServerName, allocationTypes))
+                {
+                    throw new Exception("Error - " + dataAllocationEngine.getErrorMessage());
+                }
+            } else
+            {
+
+            }
+        }
+    }
+
     public class TestBase
     {
         protected IWebDriver driver;
 
-        public String APIUrl = "";
-
-        public String APIKey = "";
+        protected DataAllocationEngine dataAllocationEngine;
 
         [SetUp]
         public void initDriver()
@@ -30,6 +84,12 @@ namespace MagentoSeleniumNet.Tests
             options.AddArguments(new String[] { "--start-maximized" });
 
             driver = new ChromeDriver(options);
+
+            ConnectionProfile cp = new ConnectionProfile();
+            cp.APIKey = ModellerConfig.APIKey;
+            cp.Url = ModellerConfig.APIUrl;
+
+            dataAllocationEngine = new DataAllocationEngine(cp);
         }
 
         [TearDown]
@@ -55,14 +115,14 @@ namespace MagentoSeleniumNet.Tests
 
                 // Post it
                 ConnectionProfile cp = new ConnectionProfile();
-                cp.APIKey = APIKey;
-                cp.Url = APIUrl;
+                cp.APIKey = ModellerConfig.APIKey;
+                cp.Url = ModellerConfig.APIUrl;
 
                 TestRunService runService = new TestRunService(cp);
                 runService.PostTestRun(testPathRun);
             }
 
-            driver.Quit();
+            driver.Close();
         }
     }
 }
