@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using CuriositySoftware.RunResult.Entities;
 using CuriositySoftware.DataAllocation.Engine;
 
-namespace MagentoSeleniumNet.Tests
+namespace Tests
 {
     [TestFixture]
     public class CustomLoginTest : TestBase

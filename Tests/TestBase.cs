@@ -15,13 +15,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagentoSeleniumNet.Tests
+namespace Tests
 {
     public class ModellerConfig
     {
         public static String APIUrl = "http://localhost:8080";
 
-        public static String APIKey = "PtYawE1NRkqBmf4dy3tY6kJW5";
+        public static String APIKey = "IwTpqlLI5PQXCO2bALsH4JQal";
 
         public static String ServerName = "VIP-James";
     }
