@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestModeller_CSharp.DataAllocation.Entities;
 using TestModellerCSharp.Pages.Samples.Splendid;
 
 namespace Tests
@@ -14,6 +15,7 @@ namespace Tests
     [TestFixture]
     public class SplendidCreateOppertunity_DataAllocation : TestBase
     {
+/*
         [Test]
         [DataAllocation("Splendid Dev Team", "CreateLeads", (new[] { "Campaign Active and Mail", "Find Valid Account" }))]
         public void DefaultProfileGoToUrlPositiveNamePositiveAccountNameNegativeAmountSave1()
@@ -43,5 +45,6 @@ namespace Tests
 
             _PagesOpportunities.Click__Save_();
         }
+*/
     }
 }

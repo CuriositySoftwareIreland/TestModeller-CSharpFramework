@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace Tests
 {
@@ -21,9 +22,19 @@ namespace Tests
     {
         public static String APIUrl = "http://localhost:8080";
 
-        public static String APIKey = "IwTpqlLI5PQXCO2bALsH4JQal";
+        public static String APIKey = "PtYawE1NRkqBmf4dy3tY6kJW5";
 
         public static String ServerName = "VIP-James";
+
+        public static ConnectionProfile GetConnectionProfile()
+        {
+            ConnectionProfile cp = new ConnectionProfile();
+
+            cp.APIKey = ModellerConfig.APIKey;
+            cp.Url = ModellerConfig.APIUrl;
+
+            return cp;
+        }
     }
 
     [SetUpFixture]
@@ -70,6 +81,8 @@ namespace Tests
 
     public class TestBase
     {
+        public static TestPathRunEntity testPathRun;
+
         protected IWebDriver driver;
 
         protected DataAllocationEngine dataAllocationEngine;
@@ -77,6 +90,8 @@ namespace Tests
         [SetUp]
         public void initDriver()
         {
+            testPathRun = new TestPathRunEntity();
+
             ChromeOptions options = new ChromeOptions();
             options.AddArguments(new String[] { "--start-maximized" });
 
@@ -97,7 +112,6 @@ namespace Tests
             {
                 String guid = attr[0].guid;
 
-                TestPathRunEntity testPathRun = new TestPathRunEntity();
                 testPathRun.message = TestExecutionContext.CurrentContext.CurrentResult.Message; 
                 testPathRun.runTime = (int) (TestExecutionContext.CurrentContext.CurrentResult.EndTime.ToUniversalTime().Ticks - TestExecutionContext.CurrentContext.CurrentResult.StartTime.ToUniversalTime().Ticks);
                 testPathRun.runTimeStamp = DateTime.Now;
@@ -105,17 +119,17 @@ namespace Tests
                 testPathRun.vipRunId = (TestRunIdGenerator.GenerateGuid());
 
                 if (TestExecutionContext.CurrentContext.CurrentResult.ResultState.Equals(ResultState.Success)) {
+                    TestModellerLogger.PassStepWithScreenshot(driver, "Test Passed");
                     testPathRun.testStatus = (TestPathRunStatus.Passed);
                 } else {
+                    TestModellerLogger.FailStepWithScreenshot(driver, "Test Failed");
+
                     testPathRun.testStatus = (TestPathRunStatus.Failed);
                 }
 
-                // Post it
-                ConnectionProfile cp = new ConnectionProfile();
-                cp.APIKey = ModellerConfig.APIKey;
-                cp.Url = ModellerConfig.APIUrl;
+                testPathRun.testPathRunSteps = TestModellerLogger.steps;
 
-                TestRunService runService = new TestRunService(cp);
+                TestRunService runService = new TestRunService(ModellerConfig.GetConnectionProfile());
                 runService.PostTestRun(testPathRun);
             }
 
