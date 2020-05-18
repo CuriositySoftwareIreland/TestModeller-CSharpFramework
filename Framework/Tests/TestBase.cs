@@ -90,6 +90,8 @@ namespace Tests
         [SetUp]
         public void initDriver()
         {
+            TestModellerLogger.steps.Clear();
+
             testPathRun = new TestPathRunEntity();
 
             ChromeOptions options = new ChromeOptions();
