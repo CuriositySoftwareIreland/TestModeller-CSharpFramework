@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pages
@@ -31,6 +32,21 @@ namespace Pages
             RemoteWebElement ele = (RemoteWebElement)((IJavaScriptExecutor)m_Driver).ExecuteScript("return arguments[0].shadowRoot", element);
 
             return ele;
+        }
+
+        protected void clickElement(IWebElement element)
+        {
+            IJavaScriptExecutor executor = (IJavaScriptExecutor)m_Driver;
+            executor.ExecuteScript("arguments[0].click();", element);
+        }
+
+        protected void sendKeysElement(IWebElement element, String text)
+        {
+            clickElement(element);
+
+            element.Clear();
+
+            element.SendKeys(text);
         }
 
         protected RemoteWebElement expandShadowRoots(List<By> elems)
@@ -115,8 +131,8 @@ namespace Pages
 
         protected IWebElement getWebElement(By by)
         {
-            waitForLoaded(by, 100);
-            waitForVisible(by, 100);
+            waitForLoaded(by, 10);
+            waitForVisible(by, 10);
 
             try
             {
