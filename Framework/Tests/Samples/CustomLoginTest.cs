@@ -17,7 +17,7 @@ namespace Tests
     public class CustomLoginTest : TestBase
     {
         [Test]
-        [TestModellerId("6552c259-ba96-48b3-978f-a221b958946f")]
+        [TestModellerId("91eb4aaf-516c-49f2-a373-b359928c1b9f")]
         public void InvalidLoginEmail()
         {
             CustomerLoginPage customerLoginPage = new CustomerLoginPage(driver);
