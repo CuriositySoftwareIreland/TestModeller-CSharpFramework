@@ -22,7 +22,7 @@ namespace Tests
     {
         public static String APIUrl = "http://localhost:8080";
 
-        public static String APIKey = "PtYawE1NRkqBmf4dy3tY6kJW5";
+        public static String APIKey = "EujKXoGF0You0A7AXZTrCza_V";
 
         public static String ServerName = "VIP-James";
 

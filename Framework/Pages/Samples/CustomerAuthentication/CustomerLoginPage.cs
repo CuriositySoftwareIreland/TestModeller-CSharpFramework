@@ -18,7 +18,7 @@ namespace Pages.CustomerAuthentication
 
         By loginButtonId = By.Id("send2");
 
-        By forgotPassButtonClass = By.ClassName("action remind");
+        By forgotPassButtonClass = By.ClassName("action");
 
         By emailErrorId = By.Id("email-error");
 
