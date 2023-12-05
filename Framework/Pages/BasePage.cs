@@ -27,6 +27,30 @@ namespace Pages
             jsExec = (IJavaScriptExecutor)this.m_Driver;
         }
 
+        public void passStep(String msg)
+        {
+            Utilities.TestModellerLogger.PassStep(m_Driver, msg);
+        }
+
+        public void passStepWithScreenshot(String msg)
+        {
+            Utilities.TestModellerLogger.PassStepWithScreenshot(m_Driver, msg);
+        }
+
+        public void failStep(String msg)
+        {
+            Utilities.TestModellerLogger.FailStepWithScreenshot(m_Driver, msg);
+
+            throw new Exception(msg);
+        }
+
+        public void failStep(String msg, String details)
+        {
+            Utilities.TestModellerLogger.FailStepWithScreenshot(m_Driver, msg + "; " + details);
+
+            throw new Exception(msg + "; " + details);
+        }
+
         public RemoteWebElement expandRootElement(IWebElement element)
         {
             RemoteWebElement ele = (RemoteWebElement)((IJavaScriptExecutor)m_Driver).ExecuteScript("return arguments[0].shadowRoot", element);
@@ -140,9 +164,65 @@ namespace Pages
             }
             catch (Exception e)
             {
-                return null;
+                return SearchInAllIframes(by);
             }
         }
+        protected IWebElement SearchInAllIframes(By by)
+        {
+            IWebElement element = null;
+
+            // Search for the desired element on the main page
+            try
+            {
+                element = m_Driver.FindElement(by);
+                Console.WriteLine("Element found on main page: " + by.ToString());
+                return element;
+            }
+            catch (NoSuchElementException)
+            {
+                // Element not found on main page
+            }
+
+            // Get a list of all iframes on the page
+            IList<IWebElement> iframes = m_Driver.FindElements(By.TagName("iframe"));
+
+            // Loop through each iframe and search for the desired element within it
+            foreach (IWebElement iframe in iframes)
+            {
+                try
+                {
+                    m_Driver.SwitchTo().Frame(iframe);
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    element = m_Driver.FindElement(by);
+                    return element;
+                }
+                catch (NoSuchElementException)
+                {
+                    // Element not found in iframe
+                }
+
+                // Recursively search within any nested iframes
+                IWebElement elem = SearchInAllIframes(by);
+                if (elem != null)
+                    return elem;
+
+                try
+                {
+                    m_Driver.SwitchTo().DefaultContent();
+                }
+                catch (Exception) { }
+            }
+
+            return null;
+        }
+
 
         protected void waitForLoaded(By by, int waitTime)
         {

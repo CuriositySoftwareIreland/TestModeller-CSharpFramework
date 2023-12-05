@@ -13,7 +13,6 @@ using CuriositySoftware.DataAllocation.Engine;
 namespace Tests
 {
     [TestFixture]
-    [Ignore("Sample test requires correct ConnectionProfile setup")]
     public class CustomLoginTest : TestBase
     {
         [Test]
